@@ -112,3 +112,94 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* 布局规划器 */
+.layout-planner {
+  display: grid;
+  gap: 16px;
+}
+
+.layout-canvas-wrap {
+  background: #fff;
+  border: 1px solid #e5ebe5;
+  border-radius: 12px;
+  padding: 12px;
+  overflow: hidden;
+}
+
+.layout-canvas {
+  display: block;
+  width: 100%;
+  max-height: 70vh;
+  touch-action: none;
+  user-select: none;
+}
+
+.layout-floor {
+  fill: #f6f8f4;
+  stroke: #9db3a4;
+  stroke-width: 0.8;
+}
+
+.layout-item {
+  stroke-width: 0.8;
+}
+
+.layout-item-furniture {
+  fill: #d9b98c;
+  stroke: #a97f4c;
+}
+
+.layout-item-plant {
+  fill: #8fbf7f;
+  stroke: #4f7d43;
+}
+
+.layout-item-selected {
+  stroke: #2f6fed;
+  stroke-width: 1.4;
+  stroke-dasharray: 3 2;
+}
+
+.layout-clearance {
+  fill: rgba(79, 125, 67, 0.08);
+  stroke: #4f7d43;
+  stroke-width: 0.5;
+  stroke-dasharray: 2.5 2;
+}
+
+.layout-item-label {
+  font-size: 7px;
+  fill: #33403a;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+}
+
+.layout-resize-handle {
+  fill: #fff;
+  stroke: #2f6fed;
+  stroke-width: 1;
+  cursor: nwse-resize;
+}
+
+.layout-ghost {
+  fill: none;
+  stroke-width: 1;
+  stroke-dasharray: 3 2;
+}
+
+.layout-ghost-valid {
+  stroke: #2f9e63;
+  fill: rgba(47, 158, 99, 0.15);
+}
+
+.layout-ghost-invalid {
+  stroke: #d4380d;
+  fill: rgba(212, 56, 13, 0.15);
+}
+
+.layout-ghost-warning {
+  font-size: 8px;
+  fill: #d4380d;
+}

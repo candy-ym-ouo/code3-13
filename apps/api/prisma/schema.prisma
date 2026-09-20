@@ -134,6 +134,11 @@ enum JobStatus {
   FAILED
 }
 
+enum LayoutItemKind {
+  FURNITURE
+  PLANT
+}
+
 model User {
   id                    String                @id @default(cuid())
   email                 String                @unique
@@ -237,6 +242,7 @@ model Balcony {
   observations Observation[]
   actionLogs  ActionLog[]
   reminders   Reminder[]
+  layout      BalconyLayout?
 
   @@index([workspaceId, archivedAt])
 }
@@ -511,4 +517,52 @@ model ExportJob {
   user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, createdAt(sort: Desc)])
+}
+
+model BalconyLayout {
+  id        String           @id @default(cuid())
+  balconyId String           @unique
+  version   Int              @default(1)
+  widthCm   Int              @default(360)
+  depthCm   Int              @default(240)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  balcony   Balcony          @relation(fields: [balconyId], references: [id], onDelete: Cascade)
+  items     LayoutItem[]
+  revisions LayoutRevision[]
+}
+
+model LayoutItem {
+  id          String         @id @default(cuid())
+  layoutId    String
+  kind        LayoutItemKind
+  name        String
+  x           Float
+  y           Float
+  w           Float
+  h           Float
+  clearanceCm Float          @default(0)
+  sortOrder   Int            @default(0)
+  plantId     String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  layout      BalconyLayout  @relation(fields: [layoutId], references: [id], onDelete: Cascade)
+
+  @@index([layoutId, sortOrder])
+}
+
+model LayoutRevision {
+  id         String        @id @default(cuid())
+  layoutId   String
+  seq        Int
+  label      String
+  beforeJson Json
+  afterJson  Json
+  undone     Boolean       @default(false)
+  actorId    String?
+  createdAt  DateTime      @default(now())
+  layout     BalconyLayout @relation(fields: [layoutId], references: [id], onDelete: Cascade)
+
+  @@unique([layoutId, seq])
+  @@index([layoutId, undone])
 }
