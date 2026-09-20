@@ -1,4 +1,7 @@
 import { z } from 'zod';
+import { MAX_BALCONY_SIDE_CM, MIN_BALCONY_SIDE_CM, MIN_ZONE_SIDE_CM } from './layout.js';
+
+export * from './layout.js';
 
 export const LIGHT_LEVELS = ['DARK', 'LOW', 'INDIRECT', 'BRIGHT', 'DIRECT'] as const;
 export const WIND_DIRECTIONS = [
@@ -57,6 +60,8 @@ export const balconySchema = z.object({
   orientation: z.string().trim().max(40).optional(),
   floor: optionalFormNumber(z.number().int().min(-10).max(200).optional()),
   notes: z.string().trim().max(1000).optional(),
+  widthCm: optionalFormNumber(z.number().int().min(MIN_BALCONY_SIDE_CM).max(MAX_BALCONY_SIDE_CM).optional()),
+  depthCm: optionalFormNumber(z.number().int().min(MIN_BALCONY_SIDE_CM).max(MAX_BALCONY_SIDE_CM).optional()),
 });
 
 export const zoneSchema = z.object({
@@ -67,7 +72,18 @@ export const zoneSchema = z.object({
   azimuthDegrees: optionalFormNumber(z.number().int().min(0).max(359).optional()),
   sunExposure: z.enum(LIGHT_LEVELS).optional(),
   sortOrder: z.number().int().min(0).max(10000).default(0),
+  xCm: optionalFormNumber(z.number().int().min(0).max(MAX_BALCONY_SIDE_CM).optional()),
+  yCm: optionalFormNumber(z.number().int().min(0).max(MAX_BALCONY_SIDE_CM).optional()),
+  widthCm: optionalFormNumber(z.number().int().min(MIN_ZONE_SIDE_CM).max(MAX_BALCONY_SIDE_CM).optional()),
+  depthCm: optionalFormNumber(z.number().int().min(MIN_ZONE_SIDE_CM).max(MAX_BALCONY_SIDE_CM).optional()),
 });
+
+/** 四个几何字段必须同时给出或同时省略。 */
+export const zoneGeometryComplete = (value: { xCm?: number; yCm?: number; widthCm?: number; depthCm?: number }) => {
+  const keys = ['xCm', 'yCm', 'widthCm', 'depthCm'] as const;
+  const present = keys.filter((key) => value[key] !== undefined);
+  return present.length === 0 || present.length === keys.length;
+};
 
 export const plantSchema = z.object({
   workspaceId: z.string().cuid(),

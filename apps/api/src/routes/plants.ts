@@ -5,6 +5,7 @@ import { prisma } from '../db.js';
 import { requireAuth } from '../lib/auth.js';
 import { AppError, parseOrThrow } from '../lib/errors.js';
 import { requireWorkspaceRole, workspaceIdForPlant } from '../services/authorization.js';
+import { assertPlantFitsZone } from '../services/layout.js';
 
 export async function plantRoutes(app: FastifyInstance) {
   app.addHook('preHandler', requireAuth);
@@ -82,6 +83,13 @@ export async function plantRoutes(app: FastifyInstance) {
     }
     return prisma.$transaction(async (tx) => {
       if (input.zoneId && input.zoneId !== plant.zoneId) {
+        const targetZone = await tx.zone.findUnique({ where: { id: input.zoneId } });
+        if (!targetZone) throw new AppError(422, 'ZONE_MISMATCH', '位置不属于当前空间');
+        await assertPlantFitsZone(tx, targetZone.id, {
+          id: plant.id,
+          name: plant.name,
+          potSizeCm: input.potSizeCm ?? plant.potSizeCm,
+        });
         await tx.plantZoneHistory.create({
           data: {
             plantId: plant.id,
@@ -113,6 +121,7 @@ export async function plantRoutes(app: FastifyInstance) {
       throw new AppError(422, 'FUTURE_MOVE', '搬动时间不能晚于当前时间 5 分钟');
     }
     return prisma.$transaction(async (tx) => {
+      await assertPlantFitsZone(tx, zone.id, plant);
       await tx.plantZoneHistory.create({ data: { plantId: plant.id, fromZoneId: plant.zoneId, toZoneId: zone.id, movedAt } });
       return tx.plant.update({ where: { id: plant.id }, data: { zoneId: zone.id } });
     });

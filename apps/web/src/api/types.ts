@@ -21,6 +21,9 @@ export type Balcony = {
   orientation?: string | null;
   floor?: number | null;
   notes?: string | null;
+  widthCm?: number | null;
+  depthCm?: number | null;
+  layoutVersion: number;
   zones: Zone[];
 };
 
@@ -31,6 +34,36 @@ export type Zone = {
   description?: string | null;
   sunExposure?: string | null;
   sortOrder: number;
+  xCm?: number | null;
+  yCm?: number | null;
+  widthCm?: number | null;
+  depthCm?: number | null;
+  zIndex: number;
+};
+
+export type LayoutPlant = {
+  id: string;
+  name: string;
+  potSizeCm?: number | null;
+  status: string;
+};
+
+export type LayoutZone = Zone & {
+  plants: LayoutPlant[];
+};
+
+export type BalconyLayout = {
+  id: string;
+  name: string;
+  widthCm: number | null;
+  depthCm: number | null;
+  layoutVersion: number;
+  zones: LayoutZone[];
+};
+
+export type LayoutCommitResult = {
+  layoutVersion: number;
+  zoneCount: number;
 };
 
 export type Plant = {

@@ -229,6 +229,9 @@ model Balcony {
   orientation String?
   floor       Int?
   notes       String?
+  widthCm     Int?
+  depthCm     Int?
+  layoutVersion Int        @default(0)
   archivedAt  DateTime?
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
@@ -250,6 +253,11 @@ model Zone {
   azimuthDegrees Int?
   sunExposure    LightLevel?
   sortOrder      Int          @default(0)
+  xCm            Int?
+  yCm            Int?
+  widthCm        Int?
+  depthCm        Int?
+  zIndex         Int          @default(0)
   archivedAt     DateTime?
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
@@ -261,6 +269,7 @@ model Zone {
   reminders      Reminder[]
 
   @@index([balconyId, sortOrder])
+  @@index([balconyId, zIndex])
 }
 
 model Plant {

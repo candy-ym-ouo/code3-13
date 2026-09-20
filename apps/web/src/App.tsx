@@ -8,6 +8,7 @@ import { JournalPage } from './pages/JournalPage';
 import { ObservationPage } from './pages/ObservationPage';
 import { ActionPage } from './pages/ActionPage';
 import { BalconiesPage } from './pages/BalconiesPage';
+import { LayoutPlannerPage } from './pages/layout/LayoutPlannerPage';
 import { PlantsPage } from './pages/PlantsPage';
 import { InsightsPage } from './pages/InsightsPage';
 import { PhotoComparePage } from './pages/PhotoComparePage';
@@ -44,6 +45,7 @@ export function App() {
         <Route path="/record/new" element={<ObservationPage />} />
         <Route path="/actions/new" element={<ActionPage />} />
         <Route path="/balconies" element={<BalconiesPage />} />
+        <Route path="/balconies/layout" element={<LayoutPlannerPage />} />
         <Route path="/plants" element={<PlantsPage />} />
         <Route path="/insights" element={<InsightsPage />} />
         <Route path="/photos/compare" element={<PhotoComparePage />} />
